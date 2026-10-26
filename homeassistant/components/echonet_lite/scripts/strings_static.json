@@ -1,0 +1,180 @@
+{
+  "config": {
+    "abort": {
+      "cannot_connect": "Home Assistant could not start the multicast listener. Verify that UDP multicast traffic (224.0.23.0:3610) is allowed on the host network.",
+      "reconfigure_successful": "Network interface updated successfully",
+      "single_instance_allowed": "[%key:common::config_flow::abort::single_instance_allowed%]",
+      "unknown": "Unexpected error while validating the configuration"
+    },
+    "error": {
+      "cannot_connect": "[%key:component::echonet_lite::config::abort::cannot_connect%]",
+      "unknown": "[%key:component::echonet_lite::config::abort::unknown%]"
+    },
+    "step": {
+      "reconfigure": {
+        "data": {
+          "interface": "Network interface"
+        },
+        "data_description": {
+          "interface": "Select the network interface to use for ECHONET Lite communication. Select Auto to let Home Assistant automatically detect the appropriate interface."
+        },
+        "description": "Change the network interface for ECHONET Lite communication.",
+        "title": "Reconfigure ECHONET Lite"
+      },
+      "user": {
+        "data": {
+          "interface": "[%key:component::echonet_lite::config::step::reconfigure::data::interface%]"
+        },
+        "data_description": {
+          "interface": "[%key:component::echonet_lite::config::step::reconfigure::data_description::interface%]"
+        },
+        "description": "Home Assistant automatically binds to the ECHONET Lite multicast channel (224.0.23.0:3610) and begins listening for devices.",
+        "title": "Set up ECHONET Lite"
+      }
+    }
+  },
+  "device": {
+    "unknown_class": {
+      "name": "ECHONET Lite device {class_code}"
+    }
+  },
+  "entity": {
+    "climate": {
+      "climate": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "[%key:common::state::auto%]",
+              "level_1": "Level 1",
+              "level_2": "Level 2",
+              "level_3": "Level 3",
+              "level_4": "Level 4",
+              "level_5": "Level 5",
+              "level_6": "Level 6",
+              "level_7": "Level 7",
+              "level_8": "Level 8"
+            }
+          }
+        }
+      }
+    },
+    "fan": {
+      "air_cleaner": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "auto": "[%key:common::state::auto%]",
+              "manual": "[%key:common::state::manual%]"
+            }
+          }
+        }
+      },
+      "fan": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "auto": "[%key:common::state::auto%]",
+              "manual": "[%key:common::state::manual%]"
+            }
+          }
+        }
+      }
+    },
+    "light": {
+      "general_lighting": {
+        "state_attributes": {
+          "effect": {
+            "state": {
+              "auto": "[%key:common::state::auto%]",
+              "color": "Color lighting",
+              "night": "Night lighting",
+              "normal": "Main lighting"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "installation_location_code": {
+        "name": "Installation location"
+      },
+      "installation_location_number": {
+        "name": "Installation location number",
+        "state": {
+          "0": "Unset",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7"
+        }
+      }
+    },
+    "sensor": {
+      "cumulative_energy": {
+        "name": "Channel {channel} cumulative energy"
+      },
+      "cumulative_energy_forward": {
+        "name": "Channel {channel} cumulative energy (forward)"
+      },
+      "cumulative_energy_reverse": {
+        "name": "Channel {channel} cumulative energy (reverse)"
+      },
+      "duplex_instantaneous_power": {
+        "name": "Channel {channel} instantaneous power"
+      },
+      "simplex_instantaneous_power": {
+        "name": "Channel {channel} instantaneous power"
+      }
+    },
+    "water_heater": {
+      "electric_water_heater": {
+        "state_attributes": {
+          "operation_mode": {
+            "state": {
+              "auto": "[%key:common::state::auto%]",
+              "manual_heating": "Manual (heating)",
+              "manual_no_heating": "Manual (heating stopped)",
+              "off": "[%key:common::state::off%]"
+            }
+          }
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "epc_not_writable": {
+      "message": "EPC {epc_list} is not writable by the device."
+    },
+    "installation_location_number_unset": {
+      "message": "Cannot set location number: no installation location code is currently set. Select a location first."
+    },
+    "runtime_start_failed": {
+      "message": "Failed to start runtime client: {error}"
+    },
+    "set_failed": {
+      "message": "The target device did not accept the requested values. Rejected EPCs: {rejected_epcs}; no response for EPCs: {unanswered_epcs}."
+    },
+    "target_node_unknown": {
+      "message": "The target node address is unknown."
+    },
+    "target_temperature_required": {
+      "message": "A target temperature value is required."
+    },
+    "unsupported_value": {
+      "message": "Unsupported value: {value}"
+    }
+  },
+  "issues": {
+    "runtime_client_error": {
+      "description": "The ECHONET Lite integration encountered an error: {error}. This may be caused by network issues or device disconnection. Check your network configuration and ensure your ECHONET Lite devices are powered on.",
+      "title": "ECHONET Lite runtime error"
+    },
+    "runtime_inactive": {
+      "description": "No frames have been received from ECHONET Lite devices for more than {minutes} minutes. This may indicate that devices are offline or there is a network issue. Check that your ECHONET Lite devices are powered on and connected to the network.",
+      "title": "ECHONET Lite devices not responding"
+    }
+  }
+}

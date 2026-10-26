@@ -1,0 +1,128 @@
+# serializer version: 1
+# name: test_config_entry_diagnostics
+  dict({
+    'config_entry': dict({
+      'created_at': '2025-01-01T00:00:00+00:00',
+      'data': dict({
+        'interface': '**REDACTED**',
+      }),
+      'disabled_by': None,
+      'discovery_keys': dict({
+      }),
+      'domain': 'echonet_lite',
+      'entry_id': '01JGFJJZ008DNE3BKJ7ZE14YFE',
+      'minor_version': 1,
+      'modified_at': '2025-01-01T00:00:00+00:00',
+      'options': dict({
+      }),
+      'pref_disable_new_entities': False,
+      'pref_disable_polling': False,
+      'source': 'user',
+      'subentries': list([
+      ]),
+      'title': 'Mock Title',
+      'unique_id': None,
+      'version': 1,
+    }),
+    'devices': list([
+      dict({
+        'attempted_inf_epcs': '',
+        'class_code': '0x0011',
+        'confirmed_inf_epcs': '',
+        'device_key': '**REDACTED**',
+        'effective_fast_poll_epcs': '',
+        'effective_poll_epcs': 'E0',
+        'eoj': '0x001101',
+        'failed_inf_epcs': '',
+        'fast_poll_epcs': '',
+        'get_epcs': 'E0',
+        'inf_epcs': '',
+        'instance': 1,
+        'manufacturer_code': '0x000005',
+        'manufacturer_name_en': 'SHARP CORPORATION',
+        'manufacturer_name_ja': 'シャープ株式会社',
+        'node_id': '**REDACTED**',
+        'observed_batch_capacity': 4,
+        'poll_epcs': 'E0',
+        'poller': dict({
+          'consecutive_failures': 0,
+          'fast_interval': 10.0,
+          'latency_ewma': None,
+          'normal_interval': 60.0,
+        }),
+        'product_code': 'ECHONETMODEL',
+        'properties': dict({
+          '0x8A': '00 00 05',
+          '0x8C': '45 43 48 4f 4e 45 54 4d 4f 44 45 4c 20 20',
+          '0x8D': '**REDACTED**',
+          '0x9D': '00',
+          '0x9E': '00',
+          '0x9F': '01 e0',
+          '0xE0': '00 64',
+        }),
+        'serial_number': '**REDACTED**',
+        'set_epcs': '',
+      }),
+    ]),
+    'runtime': dict({
+      'device_count': 1,
+      'health': dict({
+        'last_client_error': None,
+        'last_client_error_recorded': False,
+        'last_restart_recorded': False,
+        'restart_attempts': 0,
+      }),
+      'last_frame_received': True,
+      'last_runtime_activity_seen': True,
+      'tasks': dict({
+        'event_consumer_task_done': False,
+      }),
+    }),
+  })
+# ---
+# name: test_device_diagnostics
+  dict({
+    'attempted_inf_epcs': '',
+    'class_code': '0x0011',
+    'confirmed_inf_epcs': '',
+    'device_key': '**REDACTED**',
+    'effective_fast_poll_epcs': '',
+    'effective_poll_epcs': 'E0',
+    'eoj': '0x001101',
+    'failed_inf_epcs': '',
+    'fast_poll_epcs': '',
+    'get_epcs': 'E0',
+    'inf_epcs': '',
+    'instance': 1,
+    'manufacturer_code': '0x000005',
+    'manufacturer_name_en': 'SHARP CORPORATION',
+    'manufacturer_name_ja': 'シャープ株式会社',
+    'node_id': '**REDACTED**',
+    'observed_batch_capacity': 4,
+    'poll_epcs': 'E0',
+    'poller': dict({
+      'consecutive_failures': 0,
+      'fast_interval': 10.0,
+      'latency_ewma': None,
+      'normal_interval': 60.0,
+    }),
+    'product_code': 'ECHONETMODEL',
+    'properties': dict({
+      '0x8A': '00 00 05',
+      '0x8C': '45 43 48 4f 4e 45 54 4d 4f 44 45 4c 20 20',
+      '0x8D': '**REDACTED**',
+      '0x9D': '00',
+      '0x9E': '00',
+      '0x9F': '01 e0',
+      '0xE0': '00 64',
+    }),
+    'serial_number': '**REDACTED**',
+    'set_epcs': '',
+  })
+# ---
+# name: test_device_diagnostics_for_missing_node
+  dict({
+    'device_key': '**REDACTED**',
+    'node_known': False,
+  })
+# ---
