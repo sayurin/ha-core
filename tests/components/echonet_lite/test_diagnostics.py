@@ -211,3 +211,119 @@ async def test_config_entry_diagnostics_reports_collection_pages(
         "start": None,
         "count": None,
     }
+
+
+async def _setup_vendor_node(entry: MockConfigEntry, *get_epcs: int) -> AsyncMock:
+    """Set up a node advertising vendor EPCs and return the mocked client."""
+    coordinator = entry.runtime_data.coordinator
+    client: AsyncMock = entry.runtime_data.client
+    client.get.return_value = [
+        TestProperty(epc=EPC_GET_PROPERTY_MAP, edt=make_property_map_edt(*get_epcs)),
+        TestProperty(
+            epc=EPC_MANUFACTURER_CODE,
+            edt=TEST_MANUFACTURER_CODE.to_bytes(3, "big"),
+        ),
+    ]
+    await coordinator.device_manager.setup_device(
+        bytes.fromhex("010102").hex(), EOJ(0x001101)
+    )
+    client.get.reset_mock()
+    return client
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_config_entry_diagnostics_reads_vendor_epcs(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    init_integration: MockConfigEntry,
+) -> None:
+    """Vendor-specific EPCs are read live and listed with the properties."""
+    entry = init_integration
+    client = await _setup_vendor_node(entry, 0xE0, 0xF0, 0xF1, 0xF2)
+    client.get.return_value = [
+        TestProperty(epc=0xF0, edt=b"\x01\x02"),
+        TestProperty(epc=0xF1, edt=b""),
+        TestProperty(epc=0xF2, edt=b"\xff"),
+    ]
+
+    diagnostics = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    client.get.assert_awaited_once_with(
+        "010102", EOJ(0x001101), [0xF0, 0xF1, 0xF2], request_timeout=5.0
+    )
+    properties = diagnostics["devices"][0]["properties"]
+    assert properties["0xF0"] == "01 02"
+    assert "0xF1" not in properties
+    assert properties["0xF2"] == "ff"
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_device_diagnostics_reads_vendor_epcs(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    init_integration: MockConfigEntry,
+    device_registry: dr.DeviceRegistry,
+) -> None:
+    """Device diagnostics read vendor-specific EPCs live."""
+    entry = init_integration
+    client = await _setup_vendor_node(entry, 0xE0, 0xF0)
+    client.get.return_value = [TestProperty(epc=0xF0, edt=b"\xab")]
+    device = device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(DOMAIN, "010102-001101")},
+    )
+
+    diagnostics = await get_diagnostics_for_device(hass, hass_client, entry, device)
+
+    client.get.assert_awaited_once()
+    assert diagnostics["properties"]["0xF0"] == "ab"
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_diagnostics_skip_read_without_vendor_epcs(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    init_integration: MockConfigEntry,
+) -> None:
+    """No request is sent when the node advertises no vendor-specific EPCs."""
+    entry = init_integration
+    client = await _setup_vendor_node(entry, 0xE0)
+
+    await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    client.get.assert_not_awaited()
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_diagnostics_vendor_read_failure_falls_back_to_cache(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    init_integration: MockConfigEntry,
+) -> None:
+    """A failed read does not fail diagnostics."""
+    entry = init_integration
+    client = await _setup_vendor_node(entry, 0xE0, 0xF0)
+    client.get.side_effect = OSError("boom")
+
+    diagnostics = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    assert "0xF0" not in diagnostics["devices"][0]["properties"]
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_diagnostics_vendor_read_total_timeout(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    init_integration: MockConfigEntry,
+) -> None:
+    """Diagnostics are still returned when the total read time is exceeded."""
+    entry = init_integration
+    client = await _setup_vendor_node(entry, 0xE0, 0xF0)
+
+    # Frozen time keeps ``asyncio.timeout`` from expiring, so raise directly.
+    client.get.side_effect = TimeoutError
+
+    diagnostics = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    assert diagnostics["runtime"]["device_count"] == 1
+    assert "0xF0" not in diagnostics["devices"][0]["properties"]
