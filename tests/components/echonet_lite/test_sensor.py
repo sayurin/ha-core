@@ -89,6 +89,40 @@ async def test_temperature_sensor_state(
 
 
 @pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
+async def test_nichicon_multiple_input_pcs_f6_energy_sensors(
+    hass: HomeAssistant,
+    init_integration: MockConfigEntry,
+    entity_registry: er.EntityRegistry,
+) -> None:
+    """Expose the Nichicon F6 cumulative bought and sold energy fields."""
+    entry = init_integration
+    coordinator = entry.runtime_data.coordinator
+
+    node_id = bytes.fromhex("01010a").hex()
+    eoj = EOJ(0x02A501)
+
+    entry.runtime_data.client.get.return_value = [
+        TestProperty(epc=EPC_GET_PROPERTY_MAP, edt=make_property_map_edt(0xF6)),
+        TestProperty(epc=EPC_MANUFACTURER_CODE, edt=(0x00006C).to_bytes(3, "big")),
+        TestProperty(epc=0xF6, edt=bytes.fromhex("0000ed2900002841")),
+    ]
+
+    await coordinator.device_manager.setup_device(node_id, eoj)
+    await hass.async_block_till_done()
+
+    for offset, state_value in ((0, "60.713"), (4, "10.305")):
+        entity_id = entity_registry.async_get_entity_id(
+            "sensor", DOMAIN, f"01010a-02a501-f6_{offset}"
+        )
+        assert entity_id is not None
+        state = hass.states.get(entity_id)
+        assert state is not None
+        assert state.state == state_value
+        assert state.attributes["unit_of_measurement"] == "kWh"
+        assert state.attributes["state_class"] == "total_increasing"
+
+
+@pytest.mark.usefixtures("mock_definitions_registry", "mock_echonet_lite_client")
 async def test_coefficient_epc_is_polled_via_dependent_sensor(
     hass: HomeAssistant,
     init_integration: MockConfigEntry,
