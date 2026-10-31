@@ -9,6 +9,6 @@
   "iot_class": "local_polling",
   "loggers": ["pyhems"],
   "quality_scale": "silver",
-  "requirements": ["pyhems==0.8.16"],
+  "requirements": ["pyhems==0.8.17"],
   "single_config_entry": true
 }

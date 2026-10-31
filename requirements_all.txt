@@ -2289,7 +2289,7 @@ pyhaversion==22.8.0
 pyhelty==0.2.0
 
 # homeassistant.components.echonet_lite
-pyhems==0.8.16
+pyhems==0.8.17
 
 # homeassistant.components.heos
 pyheos==1.0.6
