@@ -111,17 +111,12 @@ def make_property_map_edt(*epcs: int) -> bytes:
 
 @pytest.fixture
 def mock_async_validate_network() -> Generator[AsyncMock]:
-    """Patch the multicast socket to avoid I/O during flows."""
-
-    mock_protocol = MagicMock()
-    mock_protocol.close = MagicMock()
-    with (
-        patch(
-            "homeassistant.components.echonet_lite.config_flow.create_multicast_socket",
-            AsyncMock(return_value=mock_protocol),
-        ),
-    ):
-        yield mock_protocol
+    """Patch the interface check to avoid I/O during flows."""
+    with patch(
+        "homeassistant.components.echonet_lite.config_flow.check_interface",
+        AsyncMock(return_value=None),
+    ) as mock_check_interface:
+        yield mock_check_interface
 
 
 @pytest.fixture

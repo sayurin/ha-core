@@ -59,13 +59,14 @@ async def test_user_flow_with_custom_interface(
 
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert result["data"] == {CONF_INTERFACE: "10.10.10.10"}
+    mock_async_validate_network.assert_awaited_once_with("10.10.10.10")
 
 
 async def test_user_flow_cannot_connect(hass: HomeAssistant) -> None:
     """Test errors are surfaced when the socket cannot bind."""
 
     with patch(
-        "homeassistant.components.echonet_lite.config_flow.create_multicast_socket",
+        "homeassistant.components.echonet_lite.config_flow.check_interface",
         AsyncMock(side_effect=OSError("boom")),
     ):
         result = await hass.config_entries.flow.async_init(
