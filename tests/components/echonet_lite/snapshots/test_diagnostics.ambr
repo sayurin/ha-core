@@ -67,6 +67,7 @@
     'runtime': dict({
       'device_count': 1,
       'health': dict({
+        'decode_error_count': 0,
         'last_client_error': None,
         'last_client_error_recorded': False,
         'last_restart_recorded': False,

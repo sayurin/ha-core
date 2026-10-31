@@ -152,6 +152,7 @@ def mock_echonet_lite_client() -> Generator[AsyncMock]:
     client.probe_initial_nodes = MagicMock(return_value=True)
     client.probe_nodes = MagicMock(return_value=True)
     client.get_observed_batch_capacity = MagicMock(return_value=None)
+    client.decode_error_count = 0
 
     async def _set_properties(
         *,
