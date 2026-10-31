@@ -166,9 +166,9 @@ async def test_legacy_measurement_channel_epcs_are_never_polled(
 ) -> None:
     """Class 0x0287 EPCs 0xD0-0xEF are excluded even when the device advertises them.
 
-    See EXCLUDED_EPCS_BY_CLASS / docs/ha-0287-epc-be-implementation-report-v2.md:
-    the legacy fixed 32-channel layout must never enter monitored/fast-poll
-    EPC sets, regardless of what the device's Get property map contains.
+    See EXCLUDED_EPCS_BY_CLASS: the legacy fixed 32-channel layout must never
+    enter monitored/fast-poll EPC sets, regardless of what the device's Get
+    property map contains.
     """
     entry = init_integration
     coordinator = entry.runtime_data.coordinator
@@ -559,7 +559,7 @@ def test_all_inferred_sensor_state_classes_are_valid() -> None:
 
 # ============================================================================
 # Collection (paged list) channel sensors — class 0x0287 branch circuit
-# metering, see docs/ha-0287-epc-be-implementation-report-v2.md.
+# metering.
 # ============================================================================
 
 _POWER_DISTRIBUTION_EOJ = EOJ(0x028701)  # Power distribution board metering, instance 1

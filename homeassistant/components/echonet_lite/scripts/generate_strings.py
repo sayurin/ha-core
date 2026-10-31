@@ -1,26 +1,21 @@
 # ruff: noqa: T201
 """Generate strings.json for the ECHONET Lite integration.
 
-This script generates strings.json from pyhems definitions for entity
-translations. It does NOT generate definitions.json - that is provided
-by the pyhems library.
+Entity, state, and device translations are generated from the definitions
+registry of the installed pyhems package and merged with static strings.
 
 Run with: python -m homeassistant.components.echonet_lite.scripts.generate_strings
 
-Requires pyhems to be installed in the environment:
-- Development: uv pip install -e /workspaces/pyhems
-- Released: uv pip install pyhems
-
-Input files:
-- pyhems definitions.json (source of entity definitions with translation_key)
+Input:
+- pyhems.REGISTRY (entity, enum, and device class definitions)
 - scripts/strings_static.json (static strings for config and issues)
 - homeassistant/strings.json (common state translations for key references)
 
-Output files:
-- homeassistant/components/echonet_lite/strings.json
+Output:
+- homeassistant/components/echonet_lite/strings.json (keys sorted)
 
-Note: Translations (translations/*.json) are managed by Lokalise and should not
-be committed. Only strings.json (English base) is version controlled.
+Afterwards, regenerate the untracked translations/en.json used by tests with
+``python -m script.translations develop --integration echonet_lite``.
 """
 
 from collections import Counter
@@ -608,12 +603,6 @@ def generate_strings(registry: DefinitionsRegistry) -> dict[str, Any]:
     }
     device_section |= static_data.get("device", {})
     result["device"] = dict(sorted(device_section.items()))
-
-    # Ensure "common" is the first key in the output for readability
-    # (json.dump preserves dict insertion order)
-    if "common" in result:
-        common = result.pop("common")
-        result = {"common": common, **result}
 
     return result
 

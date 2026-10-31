@@ -818,9 +818,8 @@ async def test_unload_entry_returns_false_when_platforms_fail(
 def test_legacy_measurement_channel_epcs_excluded_from_monitored_sets() -> None:
     """Class 0x0287's 0xD0-0xEF never enter the monitored/fast-poll EPC sets.
 
-    Regression guard for docs/ha-0287-epc-be-implementation-report-v2.md
-    section 8: this must hold at module level (before any device is even
-    discovered), independent of what a real device's Get property map
+    Regression guard: this must hold at module level (before any device is
+    even discovered), independent of what a real device's Get property map
     contains.
     """
     legacy_epcs = frozenset(range(0xD0, 0xF0))
