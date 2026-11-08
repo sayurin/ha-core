@@ -841,6 +841,32 @@ class TestGenerateStrings:
         assert "step" in result.get("config", {})
         assert "user" in result["config"]["step"]
 
+    def test_water_heater_operation_translations(
+        self, registry: DefinitionsRegistry
+    ) -> None:
+        """Translate water heater state and operation mode from the same strings."""
+        entity = generate_strings(registry)["entity"]["water_heater"][
+            "electric_water_heater"
+        ]
+        assert entity["state"] == {
+            "auto": "[%key:common::state::auto%]",
+            "manual_heating": "Manual (heating)",
+            "manual_no_heating": "Manual (heating stopped)",
+            "off": "[%key:common::state::off%]",
+        }
+        assert entity["state_attributes"]["operation_mode"]["state"] == {
+            "auto": "[%key:common::state::auto%]",
+            "manual_heating": (
+                "[%key:component::echonet_lite::entity::water_heater::"
+                "electric_water_heater::state::manual_heating%]"
+            ),
+            "manual_no_heating": (
+                "[%key:component::echonet_lite::entity::water_heater::"
+                "electric_water_heater::state::manual_no_heating%]"
+            ),
+            "off": "[%key:common::state::off%]",
+        }
+
 
 # ============================================================================
 # Tests for strings.json validation
