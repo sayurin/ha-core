@@ -8,6 +8,7 @@ from homeassistant.components.echonet_lite import (
     button,
     climate,
     cover,
+    date,
     fan,
     light,
     lock,
@@ -15,6 +16,7 @@ from homeassistant.components.echonet_lite import (
     select,
     sensor,
     switch,
+    time,
     water_heater,
 )
 from homeassistant.components.echonet_lite.const import (
@@ -74,6 +76,16 @@ def test_entity_registry_enabled_default() -> None:
         for descriptions in module._DESCRIPTIONS.values():
             for description in descriptions:
                 assert description.entity_registry_enabled_default
+
+
+def test_current_date_and_time_are_disabled_by_default() -> None:
+    """Current date/time settings are disabled; other date/time entities are enabled."""
+    for module in (date, time):
+        for descriptions in module._DESCRIPTIONS.values():
+            for description in descriptions:
+                assert description.entity_registry_enabled_default is (
+                    description.epc not in (0x97, 0x98)
+                )
 
 
 def test_role_to_entity_category_covers_every_property_role() -> None:
