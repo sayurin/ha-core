@@ -2370,7 +2370,7 @@ pyhelty==0.2.0
 pyheltycloud==0.2.2
 
 # homeassistant.components.echonet_lite
-pyhems==0.9.1
+pyhems==0.9.2
 
 # homeassistant.components.heos
 pyheos==1.0.6
